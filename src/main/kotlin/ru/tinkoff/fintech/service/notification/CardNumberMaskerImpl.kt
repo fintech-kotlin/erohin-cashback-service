@@ -3,6 +3,12 @@ package ru.tinkoff.fintech.service.notification
 class CardNumberMaskerImpl: CardNumberMasker {
 
     override fun mask(cardNumber: String, maskChar: Char, start: Int, end: Int): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (cardNumber.isEmpty()) return ""
+        val end = getEndSequence(end, cardNumber.length)
+        return cardNumber.replaceRange(start, end, maskChar.toString().repeat(end - start))
+    }
+
+    private fun getEndSequence(end: Int, length: Int) : Int {
+        return if (end > length) length else end
     }
 }
