@@ -9,8 +9,22 @@ import java.time.LocalDate
 import java.time.Month
 import java.time.format.TextStyle
 import java.util.*
+import kotlin.collections.ArrayList
 
 class LoyaltyProgramIsBeerAndMccIsSpirit(private val transactionInfo: TransactionInfo): CashbackRule {
+
+    val months = mapOf(Month.JANUARY.value to "январь",
+        Month.FEBRUARY.value to "февраль",
+        Month.MARCH.value to "март",
+        Month.APRIL.value to "апрель",
+        Month.MAY.value to "май",
+        Month.JUNE.value to "июнь",
+        Month.JULY.value to "июль",
+        Month.AUGUST.value to "август",
+        Month.SEPTEMBER.value to "сентябрь",
+        Month.OCTOBER.value to "октябрь",
+        Month.NOVEMBER.value to "ноябрь",
+        Month.DECEMBER.value to "декабрь")
 
     override fun getCashback(): Double {
         if (transactionInfo.loyaltyProgramName == LOYALTY_PROGRAM_BEER && transactionInfo.mccCode == MCC_BEER) {
@@ -32,6 +46,6 @@ class LoyaltyProgramIsBeerAndMccIsSpirit(private val transactionInfo: Transactio
     }
 
     private fun getFirstLetterOfMonth(month: Month): Char {
-        return month.getDisplayName(TextStyle.FULL_STANDALONE, Locale.forLanguageTag("ru"))[0]
+        return months[month.value].toString()[0]
     }
 }
