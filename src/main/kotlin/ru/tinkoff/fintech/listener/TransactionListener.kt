@@ -23,7 +23,6 @@ class TransactionListener @Autowired constructor(
         try {
             val transaction = stringToTransaction(message)
             transactionService.process(transaction)
-            LOGGER.info("new message: '$transaction'")
         } catch (e: Exception) {
             LOGGER.info("Сообщение не удалось обработать: '$message'" , e)
         }

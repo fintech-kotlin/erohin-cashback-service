@@ -46,9 +46,7 @@ class TransactionService @Autowired constructor(
 
         val loyaltyPaymentEntity = makeLoyaltyPaymentEntity(cashback, card, sign, transaction)
 
-        val loyaltyPaymentEntity2 = loyaltyPaymentRepository.save(loyaltyPaymentEntity)
-
-        println(loyaltyPaymentEntity2)
+        loyaltyPaymentRepository.save(loyaltyPaymentEntity)
     }
 
     companion object {
