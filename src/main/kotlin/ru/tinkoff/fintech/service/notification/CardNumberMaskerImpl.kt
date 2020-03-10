@@ -1,5 +1,9 @@
 package ru.tinkoff.fintech.service.notification
 
+import org.springframework.context.annotation.Bean
+import org.springframework.stereotype.Component
+
+@Component
 class CardNumberMaskerImpl: CardNumberMasker {
 
     override fun mask(cardNumber: String, maskChar: Char, start: Int, end: Int): String {

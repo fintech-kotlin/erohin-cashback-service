@@ -10,21 +10,21 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "loyalty_payment")
-class LoyaltyPaymentEntity(
+data class LoyaltyPaymentEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
     val value: Double,
 
-    @Column(name = "CARD_ID")
+    @field:Column(name = "CARD_ID")
     val cardId: String,
 
     val sign: String,
 
-    @Column(name = "TRANSACTION_ID")
+    @field:Column(name = "TRANSACTION_ID")
     val transactionId: String,
 
-    @Column(name = "date_time")
+    @field:Column(name = "date_time")
     val dateTime: LocalDateTime
 )

@@ -1,16 +1,17 @@
 spring:
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:db
-    username: sa
-    password: sa
+    url: ****
+    username: ****
+    password: ****
   kafka:
     consumer:
-      bootstrapServers: ${spring.embedded.kafka.brokers}
-      groupId: testGroup
+      bootstrapServers: 40.69.78.245:19092
+      groupId: cashback
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
 
 paimentprocessing:
   services:
@@ -22,7 +23,4 @@ paimentprocessing:
   sign: erohin
   kafka:
     consumer:
-      bootstrapServers: ${spring.embedded.kafka.brokers}
-      groupId: testGroup
-      topic: testTopic
-
+      topic: transactions
