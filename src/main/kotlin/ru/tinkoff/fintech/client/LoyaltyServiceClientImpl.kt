@@ -7,13 +7,13 @@ import org.springframework.web.client.RestTemplate
 import ru.tinkoff.fintech.model.LoyaltyProgram
 
 @Service
-class LoyaltyServiceClientImpl: LoyaltyServiceClient {
+class LoyaltyServiceClientImpl(val myRestTemplate: RestTemplate): LoyaltyServiceClient {
 
     @Value("\${paimentprocessing.services.uri.loyalty}")
     private val uri: String? = null
 
     override fun getLoyaltyProgram(id: String): LoyaltyProgram {
-        val response = RestTemplate().getForEntity("$uri/$id", LoyaltyProgram::class.java)
+        val response = myRestTemplate.getForEntity("$uri/$id", LoyaltyProgram::class.java)
 
         if (response.statusCode.is2xxSuccessful) {
             val loyaltyProgram: LoyaltyProgram = response.body

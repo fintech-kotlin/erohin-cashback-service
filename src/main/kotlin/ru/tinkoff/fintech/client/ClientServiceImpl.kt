@@ -8,13 +8,13 @@ import org.springframework.web.client.RestTemplate
 import ru.tinkoff.fintech.model.Client
 
 @Service
-class ClientServiceImpl: ClientService {
+class ClientServiceImpl(val myRestTemplate: RestTemplate): ClientService {
 
     @Value("\${paimentprocessing.services.uri.client}")
     private val uri: String? = null
 
     override fun getClient(id: String): Client {
-        val response = RestTemplate().getForEntity("$uri/$id;", Client::class.java)
+        val response = myRestTemplate.getForEntity("$uri/$id;", Client::class.java)
 
         if (response.statusCode.is2xxSuccessful) {
             val client: Client = response.body

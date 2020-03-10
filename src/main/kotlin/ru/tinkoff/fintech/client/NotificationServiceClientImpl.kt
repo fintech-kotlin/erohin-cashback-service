@@ -9,16 +9,15 @@ import org.springframework.web.client.RestTemplate
 
 
 @Service
-class NotificationServiceClientImpl: NotificationServiceClient {
+class NotificationServiceClientImpl(val myRestTemplate: RestTemplate): NotificationServiceClient {
 
     @Value("\${paimentprocessing.services.uri.notification}")
     private val uri: String? = null
 
     override fun sendNotification(clientId: String, message: String) {
-        val rest = RestTemplate()
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON_UTF8
         val request = HttpEntity(message, headers)
-        rest.postForObject("$uri/$clientId/message", request, String::class.java)
+        val rest = myRestTemplate.postForObject("$uri/$clientId/message", request, String::class.java)
     }
 }
