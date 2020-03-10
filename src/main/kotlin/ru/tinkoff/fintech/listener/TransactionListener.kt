@@ -1,15 +1,17 @@
 package ru.tinkoff.fintech.listener
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.logging.log4j.LogManager
 
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
+import ru.tinkoff.fintech.model.Transaction
 import ru.tinkoff.fintech.service.TransactionService
-import ru.tinkoff.fintech.util.Util.Factory.stringToTransaction
 
 @Component
 class TransactionListener(
-    private val transactionService: TransactionService
+    private val transactionService: TransactionService,
+    private val myObjectMapper: ObjectMapper
 ) {
     companion object {
         private val LOGGER = LogManager.getLogger()
@@ -23,6 +25,10 @@ class TransactionListener(
         } catch (e: Exception) {
             LOGGER.info("Сообщение не удалось обработать: '$message'" , e)
         }
+    }
+
+    private fun stringToTransaction(str: String): Transaction {
+        return myObjectMapper.readValue(str, Transaction::class.java)
     }
 }
 
