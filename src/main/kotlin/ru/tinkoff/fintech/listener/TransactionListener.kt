@@ -1,17 +1,14 @@
 package ru.tinkoff.fintech.listener
 
-import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.logging.log4j.LogManager
-import org.springframework.beans.factory.annotation.Autowired
+
 import org.springframework.kafka.annotation.KafkaListener
-import org.springframework.kafka.support.serializer.JsonDeserializer
 import org.springframework.stereotype.Component
-import ru.tinkoff.fintech.model.Transaction
 import ru.tinkoff.fintech.service.TransactionService
 import ru.tinkoff.fintech.util.Util.Factory.stringToTransaction
 
 @Component
-class TransactionListener @Autowired constructor(
+class TransactionListener(
     private val transactionService: TransactionService
 ) {
     companion object {

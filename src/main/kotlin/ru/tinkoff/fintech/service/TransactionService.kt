@@ -1,7 +1,6 @@
 package ru.tinkoff.fintech.service
 
 import org.apache.logging.log4j.LogManager
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import ru.tinkoff.fintech.client.CardServiceClient
@@ -15,7 +14,7 @@ import ru.tinkoff.fintech.service.cashback.CashbackCalculator
 import ru.tinkoff.fintech.service.notification.NotificationMessageGenerator
 
 @Service
-class TransactionService @Autowired constructor(
+class TransactionService (
     private val cardServiceClient: CardServiceClient,
     private val clientService: ClientService,
     private val loyaltyServiceClient: LoyaltyServiceClient,
