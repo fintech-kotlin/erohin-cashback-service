@@ -1,8 +1,11 @@
 package ru.tinkoff.fintech.service.notification
 
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 import ru.tinkoff.fintech.model.NotificationMessageInfo
 
-class NotificationMessageGeneratorImpl(
+@Component
+class NotificationMessageGeneratorImpl @Autowired constructor(
     private val cardNumberMasker: CardNumberMasker
 ) : NotificationMessageGenerator {
 

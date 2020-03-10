@@ -39,7 +39,7 @@ private const val RECEIVER_TOPIC = "testTopic"
 @RunWith(SpringRunner::class)
 @SpringBootTest
 @DirtiesContext
-internal class MyTestClass {
+internal class KafkaTopicListenerTest {
 
     @Value("classpath:/transaction.json")
     lateinit var transactionResource: Resource
@@ -88,6 +88,7 @@ internal class MyTestClass {
         log.info("Transaction have sent='{}'", transaction)
         Thread.sleep(15000) // I'm so sorry, that u see this code.
         val payments = loyaltyPaymentRepository!!.findAll()
+        println(payments)
         assertEquals(1, payments.size)
         val payment = payments[0]
         assertEquals(1, payment.id)
