@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: ****
+    username: ****
+    password: ****
+  kafka:
+    consumer:
+      bootstrapServers: 40.69.78.245:19092
+      groupId: cashback
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+
+paimentprocessing:
+  services:
+    uri:
+      card: http://****/card-service/api/v1/card
+      client: http://****/client-service/api/v1/client
+      loyalty: http://****/loyalty-service/api/v1/program
+      notification: http://****/notification-service/api/v2/client
+  sign: erohin
+  kafka:
+    consumer:
+      topic: transactions
