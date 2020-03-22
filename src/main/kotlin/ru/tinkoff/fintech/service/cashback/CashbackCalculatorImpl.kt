@@ -1,5 +1,6 @@
 package ru.tinkoff.fintech.service.cashback
 
+import org.springframework.stereotype.Component
 import ru.tinkoff.fintech.model.TransactionInfo
 import ru.tinkoff.fintech.service.cashback.rule.LoyaltyProgramIsAllAndMccIsSoftware
 import ru.tinkoff.fintech.service.cashback.rule.LoyaltyProgramIsBeerAndMccIsSpirit
@@ -16,6 +17,7 @@ internal const val MCC_BEER = 5921
 internal const val FIRST_NAME_OLEG = "олег"
 internal const val LAST_NAME_OLEGOV = "олегов"
 
+@Component
 class CashbackCalculatorImpl : CashbackCalculator {
 
     override fun calculateCashback(transactionInfo: TransactionInfo): Double {

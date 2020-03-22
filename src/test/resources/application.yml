@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:db
+    username: sa
+    password: sa
+  kafka:
+    consumer:
+      bootstrapServers: ${spring.embedded.kafka.brokers}
+      groupId: testGroup
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+paimentprocessing:
+  services:
+    uri:
+      card: http://13.79.17.165/card-service/api/v1/card
+      client: http://13.79.17.165/client-service/api/v1/client
+      loyalty: http://13.79.17.165/loyalty-service/api/v1/program
+      notification: http://13.79.17.165/notification-service/api/v2/client
+  sign: erohin
+  kafka:
+    consumer:
+      bootstrapServers: ${spring.embedded.kafka.brokers}
+      groupId: testGroup
+      topic: testTopic
+
