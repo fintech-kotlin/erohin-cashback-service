@@ -29,7 +29,7 @@ class TransactionService (
     @Value("\${paimentprocessing.sign}")
     private val sign: String = ""
 
-    fun process(transaction: Transaction) = runBlocking {
+    fun process(transaction: Transaction) = CoroutineScope(Dispatchers.Default).launch {
 
         val card = cardServiceClient.getCard(transaction.cardNumber)
 
@@ -39,13 +39,11 @@ class TransactionService (
         val loyaltyProgramDef = async {
             loyaltyServiceClient.getLoyaltyProgram(card.loyaltyProgram)
         }
-        val paymentsDef = async {
-            loyaltyPaymentRepository.findAllBySignAndCardIdAndDateTimeAfter(sign, card.id, transaction.time)
-        }
+
+        val payments = loyaltyPaymentRepository.findAllBySignAndCardIdAndDateTimeAfter(sign, card.id, transaction.time)
 
         val client = clientDef.await()
         val loyaltyProgram = loyaltyProgramDef.await()
-        val payments = paymentsDef.await()
 
         val cashback = cashbackCalculator.calculateCashback(makeTransactionInfo(loyaltyProgram, transaction, client, cashbackPerMonth(payments)))
         val notification = makeNotificationMessageInfo(client, card, cashback, transaction, loyaltyProgram)
