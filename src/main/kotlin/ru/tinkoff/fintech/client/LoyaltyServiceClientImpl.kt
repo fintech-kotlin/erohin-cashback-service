@@ -17,6 +17,6 @@ class LoyaltyServiceClientImpl(val webClient: WebClient): LoyaltyServiceClient {
             .retrieve()
             .bodyToMono(LoyaltyProgram::class.java)
 
-        return response.blockOptional().orElseThrow()
+        return response.blockOptional().get()
     }
 }
