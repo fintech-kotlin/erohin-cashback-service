@@ -40,10 +40,13 @@ class TransactionService (
             loyaltyServiceClient.getLoyaltyProgram(card.loyaltyProgram)
         }
 
-        val payments = loyaltyPaymentRepository.findAllBySignAndCardIdAndDateTimeAfter(sign, card.id, transaction.time)
+        val paymentsDef = async {
+            loyaltyPaymentRepository.findAllBySignAndCardIdAndDateTimeAfter(sign, card.id, transaction.time)
+        }
 
         val client = clientDef.await()
         val loyaltyProgram = loyaltyProgramDef.await()
+        val payments = paymentsDef.await()
 
         val cashback = cashbackCalculator.calculateCashback(makeTransactionInfo(loyaltyProgram, transaction, client, cashbackPerMonth(payments)))
         val notification = makeNotificationMessageInfo(client, card, cashback, transaction, loyaltyProgram)

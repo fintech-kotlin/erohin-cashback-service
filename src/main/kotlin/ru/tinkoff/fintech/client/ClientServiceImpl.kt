@@ -17,6 +17,6 @@ class ClientServiceImpl(val webClient: WebClient): ClientService {
             .retrieve()
             .bodyToMono(Client::class.java)
 
-        return response.blockOptional().orElseThrow()
+        return response.blockOptional().get()
     }
 }

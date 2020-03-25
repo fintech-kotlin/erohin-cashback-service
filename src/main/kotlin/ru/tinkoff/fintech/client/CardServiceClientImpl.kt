@@ -18,6 +18,6 @@ class CardServiceClientImpl(val webClient: WebClient): CardServiceClient {
             .retrieve()
             .bodyToMono(Card::class.java)
 
-        return response.blockOptional().orElseThrow()
+        return response.blockOptional().get()
     }
 }
