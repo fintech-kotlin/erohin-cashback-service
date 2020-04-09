@@ -1,5 +1,6 @@
 package ru.tinkoff.fintech.service
 
+import kotlinx.coroutines.*
 import org.apache.logging.log4j.LogManager
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -12,6 +13,7 @@ import ru.tinkoff.fintech.db.repository.LoyaltyPaymentRepository
 import ru.tinkoff.fintech.model.*
 import ru.tinkoff.fintech.service.cashback.CashbackCalculator
 import ru.tinkoff.fintech.service.notification.NotificationMessageGenerator
+import javax.swing.text.html.parser.Entity
 
 @Service
 class TransactionService (
@@ -27,24 +29,34 @@ class TransactionService (
     @Value("\${paimentprocessing.sign}")
     private val sign: String = ""
 
-    fun process(transaction: Transaction) {
+    fun process(transaction: Transaction) = CoroutineScope(Dispatchers.Default).launch {
+
         val card = cardServiceClient.getCard(transaction.cardNumber)
-        val client = clientService.getClient(card.client)
-        val loyaltyProgram = loyaltyServiceClient.getLoyaltyProgram(card.loyaltyProgram)
 
-        val payments: Set<LoyaltyPaymentEntity> = loyaltyPaymentRepository.findAllBySignAndCardIdAndDateTimeAfter(sign, card.id, transaction.time)
+        val clientDef = async {
+            clientService.getClient(card.client)
+        }
+        val loyaltyProgramDef = async {
+            loyaltyServiceClient.getLoyaltyProgram(card.loyaltyProgram)
+        }
 
-        val transactionInfo = makeTransactionInfo(loyaltyProgram, transaction, client, cashbackPerMonth(payments))
-        val cashback = cashbackCalculator.calculateCashback(transactionInfo)
+        val paymentsDef = async {
+            loyaltyPaymentRepository.findAllBySignAndCardIdAndDateTimeAfter(sign, card.id, transaction.time)
+        }
 
+        val client = clientDef.await()
+        val loyaltyProgram = loyaltyProgramDef.await()
+        val payments = paymentsDef.await()
+
+        val cashback = cashbackCalculator.calculateCashback(makeTransactionInfo(loyaltyProgram, transaction, client, cashbackPerMonth(payments)))
         val notification = makeNotificationMessageInfo(client, card, cashback, transaction, loyaltyProgram)
-
         val message = notificationMessageGenerator.generateMessage(notification)
 
-        notificationServiceClient.sendNotification(client.id, message)
+        launch {
+            notificationServiceClient.sendNotification(client.id, message)
+        }
 
         val loyaltyPaymentEntity = makeLoyaltyPaymentEntity(cashback, card, sign, transaction)
-
         loyaltyPaymentRepository.save(loyaltyPaymentEntity)
     }
 

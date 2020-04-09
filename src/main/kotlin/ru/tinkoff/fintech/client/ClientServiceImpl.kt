@@ -1,27 +1,22 @@
 package ru.tinkoff.fintech.client
 
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
-import org.springframework.web.client.HttpClientErrorException
-import org.springframework.web.client.RestTemplate
+import org.springframework.web.reactive.function.client.WebClient
 import ru.tinkoff.fintech.model.Client
 
 @Service
-class ClientServiceImpl(val myRestTemplate: RestTemplate): ClientService {
+class ClientServiceImpl(val webClient: WebClient): ClientService {
 
     @Value("\${paimentprocessing.services.uri.client}")
     private val uri: String? = null
 
     override fun getClient(id: String): Client {
-        val response = myRestTemplate.getForEntity("$uri/$id;", Client::class.java)
+        val response = webClient.get()
+            .uri("$uri/$id;")
+            .retrieve()
+            .bodyToMono(Client::class.java)
 
-        if (response.statusCode.is2xxSuccessful) {
-            val client: Client = response.body
-            println(client)
-            return client
-        } else {
-            throw HttpClientErrorException(response.statusCode ,"Сервер вернул ошибку, ответ: '${response.statusCode}'")
-        }
+        return response.blockOptional().get()
     }
 }

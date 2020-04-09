@@ -21,6 +21,7 @@ class TransactionListener(
     fun onMessage(message: String) {
         try {
             val transaction = stringToTransaction(message)
+            LOGGER.info("Новое сообщение: $message")
             transactionService.process(transaction)
         } catch (e: Exception) {
             LOGGER.info("Сообщение не удалось обработать: '$message'" , e)
